@@ -1,0 +1,102 @@
+private Double obtenerNumero(JTextField campo, String nombre) {
+        try {
+            return Double.parseDouble(campo.getText().trim());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ingrese un número válido en " + nombre,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return null;
+        }
+    }
+
+    private void mostrarResultado(String resultado) {
+        txtResultado.setText(resultado);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        Double valor1 = obtenerNumero(txtNum1, "Valor 1");
+
+        if (valor1 == null) return;
+
+        String accion = e.getActionCommand();
+
+        if (accion.equals("SUMAR") || accion.equals("RESTAR")
+                || accion.equals("MULTIPLICAR") || accion.equals("DIVIDIR")) {
+
+            Double valor2 = obtenerNumero(txtNum2, "Valor 2");
+
+            if (valor2 == null) return;
+
+            double resultado = 0;
+
+            switch (accion) {
+
+                case "SUMAR":
+                    resultado = valor1 + valor2;
+                    break;
+
+                case "RESTAR":
+                    resultado = valor1 - valor2;
+                    break;
+
+                case "MULTIPLICAR":
+                    resultado = valor1 * valor2;
+                    break;
+
+                case "DIVIDIR":
+                    if (valor2 == 0) {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "No se puede dividir entre cero",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+                    resultado = valor1 / valor2;
+                    break;
+            }
+
+            mostrarResultado(String.format("%.2f", resultado));
+            return;
+        }
+
+        switch (accion) {
+
+            case "CTOF":
+                mostrarResultado(
+                        String.format("%.2f °F", (valor1 * 9 / 5) + 32)
+                );
+                break;
+
+            case "FTOC":
+                mostrarResultado(
+                        String.format("%.2f °C", (valor1 - 32) * 5 / 9)
+                );
+                break;
+
+            case "USDCOP":
+                mostrarResultado(
+                        String.format("$%.2f COP", valor1 * TASA_DOLAR)
+                );
+                break;
+
+            case "COPUSD":
+                mostrarResultado(
+                        String.format("$%.2f USD", valor1 / TASA_DOLAR)
+                );
+                break;
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() ->
+                new Calcular().setVisible(true)
+        );
+    }
+}
